@@ -27,7 +27,7 @@
 
       <div class="header__cta">
         <a class="btn btn--ghost" href="#contacts">Связаться</a>
-        <!-- Если добавите резюме в PDF рядом с index.html, переименуйте файл на Kalinin_Andrej_CV.pdf или поменяйте ссылку -->
+        <!-- Чтобы кнопка работала, положите PDF рядом с index.html и назовите Kalinin_Andrej_CV.pdf -->
         <a class="btn btn--primary" href="Kalinin_Andrej_CV.pdf" target="_blank" rel="noopener">Резюме (PDF)</a>
       </div>
     </div>
@@ -252,12 +252,15 @@
           <div class="contact__form">
             <div class="form-card">
               <h3>Сообщение</h3>
-              <p class="meta">Форма без бэкенда (для быстрого MVP). Для реальной отправки подключим Formspree или Netlify Forms.</p>
+              <p class="meta">Форма отправляет сообщения на email через Formspree.</p>
 
-              <form id="contactForm">
+              <form id="contactForm" action="https://formspree.io/f/maqqwakb" method="POST">
+                <input type="hidden" name="_subject" value="Сообщение с сайта-портфолио" />
+                <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
                 <label>
                   <span>Имя</span>
-                  <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" />
+                  <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required />
                 </label>
 
                 <label>
@@ -267,7 +270,7 @@
 
                 <label>
                   <span>Сообщение</span>
-                  <textarea name="message" rows="5" placeholder="Коротко опишите задачу или вопрос"></textarea>
+                  <textarea name="message" rows="5" placeholder="Коротко опишите задачу или вопрос" required></textarea>
                 </label>
 
                 <button class="btn btn--primary" type="submit">Отправить</button>
@@ -291,10 +294,28 @@
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
-    document.getElementById('contactForm').addEventListener('submit', function (e) {
+
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      alert('Спасибо! Для быстрого ответа напишите мне в Telegram или на email.');
-      e.target.reset();
+      const data = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: data,
+          headers: { "Accept": "application/json" }
+        });
+
+        if (response.ok) {
+          alert("Спасибо! Сообщение отправлено.");
+          form.reset();
+        } else {
+          alert("Не удалось отправить сообщение. Попробуйте ещё раз или напишите в Telegram/email.");
+        }
+      } catch (error) {
+        alert("Ошибка сети. Попробуйте ещё раз или напишите в Telegram/email.");
+      }
     });
   </script>
 </body>
