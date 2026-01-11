@@ -181,6 +181,28 @@ h1{
   height:auto;
 }
 
+/* ===== Variant 1: subtle photo animation ===== */
+@keyframes floaty {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.photo-card{
+  animation: floaty 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.photo-card:hover{
+  transform: translateY(-6px) rotate(-0.5deg);
+  transition: transform 250ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-card{ animation: none; transition: none; }
+}
+/* =========================================== */
+
 .section{
   padding: 44px 0;
 }
